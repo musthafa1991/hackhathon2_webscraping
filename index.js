@@ -11,7 +11,7 @@ const app=express();
 app.use(cors());
 app.use(express.json());
 
-const PORT=4000;
+const PORT=process.env.PORT;
 // const MONGO_URL="mongodb://localhost:27017";
 const MONGO_URL=process.env.MONGO_URL
  
@@ -101,5 +101,5 @@ async function scrapeData() {
     console.log(result)
   }
 
-pushMongoAtlas(mobileList);
+// pushMongoAtlas(mobileList);
 app.listen(PORT,()=>console.log("server started in Port",PORT));
