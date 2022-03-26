@@ -35,10 +35,11 @@ app.get("/mobiles", async function(req,res){
 
 
 
-const mobileurl = "https://www.flipkart.com/search?q=mobiles&as=on&as-show=on&otracker=AS_Query_TrendingAutoSuggest_1_0_na_na_na&otracker1=AS_Query_TrendingAutoSuggest_1_0_na_na_na&as-pos=1&as-type=TRENDING&suggestionId=mobiles&requestId=9af3caf0-9825-4c94-8293-4a8ea873e443";
-const mobileList = [];
-async function scrapeData() {
+
+async function scrapData() {
     try {
+        const mobileurl = "https://www.flipkart.com/search?q=mobiles&as=on&as-show=on&otracker=AS_Query_TrendingAutoSuggest_1_0_na_na_na&otracker1=AS_Query_TrendingAutoSuggest_1_0_na_na_na&as-pos=1&as-type=TRENDING&suggestionId=mobiles&requestId=9af3caf0-9825-4c94-8293-4a8ea873e443";
+        const mobileList = [];
       
       const { data } = await axios.get(mobileurl);
       const $ = cheerio.load(data);
@@ -80,6 +81,15 @@ async function scrapeData() {
       })
     
       console.log(mobileList);
+      async function pushMongoAtlas(data){
+        console.log(data);
+      const result= await client.db("products").collection("mobile").insertMany(data);
+      console.log("updated successfully");
+      // const result= await client.db("products").collection("mobile").find({}).toArray();
+      console.log(result)
+    }
+  
+  pushMongoAtlas(mobileList);
    
     //   fs.writeFile("mobiles.json", JSON.stringify(mobileList, null, 2), (err) => {
     //     if (err) {
@@ -93,13 +103,9 @@ async function scrapeData() {
     }
   }
   // Invoke the above function
-//   scrapeData();
+//   scrapData();
+//  
 
-  async function pushMongoAtlas(){
-    // const result= await client.db("products").collection("mobile").insertMany();
-    const result= await client.db("products").collection("mobile").find({}).toArray();
-    console.log(result)
-  }
+  
 
-// pushMongoAtlas(mobileList);
 app.listen(PORT,()=>console.log("server started in Port",PORT));
