@@ -47,7 +47,7 @@ app.get("/", function (req, res) {
   res.send({ message: "hi dear" });
 })
 
-app.get("/mobiles", auth, async function (req, res) {
+app.get("/mobiles",auth, async function (req, res) {
   const mobiles = await client.db("products").collection("mobile").find({}).toArray();
   res.send(mobiles);
 })
@@ -84,8 +84,8 @@ app.post("/signin", async function (req, res) {
     const storedPass = userDb.password;
     const isPassMatch = await bcrypt.compare(password, storedPass);
     if (isPassMatch) {
-
-      const token = jwt.sign({ id: userDb._id }, process.env.SECRET_KEY, { expiresIn: "30s" });
+      const token = jwt.sign({ id: userDb._id }, process.env.SECRET_KEY);
+      // const token = jwt.sign({ id: userDb._id }, process.env.SECRET_KEY, { expiresIn: "30s" });
       console.log(token)
       res.send({ message: "successfully loggen in", token: token })
     }
