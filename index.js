@@ -16,18 +16,32 @@ app.use(cors());
 app.use(express.json());
 
 
+// function auth(req, res, next) {
+//   if (req.headers.authorization) {
+//     let check = jwt.verify(req.headers.authorization, process.env.SECRET_KEY)
+//     console.log(check);
+//     if (check) {
+//       next()
+//     } else {
+//       res.status(401).send({ message: "not allowed" })
+//     }
+//   } else {
+//     res.status(401).send({ message: "not allowed" })
+//   };
+// }
+
+
 function auth(req, res, next) {
-  if (req.headers.authorization) {
-    let check = jwt.verify(req.headers.authorization, process.env.SECRET_KEY)
-    console.log(check);
-    if (check) {
-      next()
-    } else {
-      res.status(401).send({ message: "not allowed" })
-    }
-  } else {
-    res.status(401).send({ message: "not allowed" })
-  };
+  try {
+    let token=req.headers.authorization;
+    console.log(token)
+      jwt.verify(token, process.env.SECRET_KEY);
+      next();
+    
+  } catch (err) {
+    res.status(401).send({error:err.message})
+  }
+
 }
 
 const PORT = process.env.PORT;
